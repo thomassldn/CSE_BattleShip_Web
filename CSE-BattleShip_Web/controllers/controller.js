@@ -16,8 +16,9 @@ const {check, validationResult } = require('express-validator');//used to valida
 //Declaration of Variables
 var first_name = "";
 var last_name = "";
-var user = "User1";
-
+var user = "User10";
+var  coor = '00';
+let coordinate = '00';
 /*===================================================
  FireStore Real-Time Database Credentials and Functions
  ===================================================*/
@@ -34,29 +35,34 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-let docRef = db.collection('BattleShip').doc('coordinates');
+let docRef = db.collection('BattleShip').doc('Player1');
 
 //This function sends the data to firestore
 function sendDataToFireStore(coordinate){
 
- //Create an object to hold clients information
- var dataObj = {};
- dataObj[user] = {
-   fname: coordinate
- };
 
-  // Add a new map field in collection "BattleShip", document "coordinates"
-  let checkInClient = docRef.set(dataObj, {merge: true})
-  .then(function() {
-      console.log("2) New sing-in stored in  firestore database!");
-  })
-  .catch(function(error) {
-      console.error("2) Error!!! Could not send user info to database: ", error);
-  });
 
+       //Create an object to hold clients information
+       var dataObj = {coordinate: coordinate};
+       /*
+       dataObj[user] = {
+         coordinate: coordinate
+       };
+       */
+        // Add a new map field in collection "BattleShip", document "coordinates"
+        let checkInClient = docRef.set(dataObj, {merge: true})
+        .then(function() {
+            console.log("4) Coordinate stored in Firestore database!");
+
+        })
+        .catch(function(error) {
+            console.error("4) Error!!! Could not send coordinate to database: ", error);
+        });
+
+
+
+        return true;
 }//End() function sendDataToFireStore()
-
-
 
 
 
@@ -94,11 +100,58 @@ module.exports = function(app){
 
   });
 
-
+  //Start of Application
   app.get('/gameboard', function(request, response){
+
+
+
+
+      //reponse.render('A34J');
       response.render('gameboard.ejs');
 
+
     });
+/*
+  app.post('/coordinate', (request, response) => {
+    console.log("TEST",request.body.coordinate);
+
+  })
+*/
+  app.post('/gameboard', function(request, response){
+    //1) Receive  coordinate from front end
+    let hit = false;
+    let id = request.body.id;
+    console.log("1) Coordinate received from front end:", request.body.id);
+
+    //console.log("C)
+    //check firebase to see if id hit
+    if(!hit){
+      //hit = true;
+      //2) Sending coordinate to Firestore
+      console.log("2) Sending coordinate to Firestore")
+      hit = sendDataToFireStore(request.body.id);
+      console.log("5) Sending coordinate to front-end: ", coordinate);
+    }
+
+    //Before sending response, read data from firestore in real time and send it to the front end
+    //Read client data from FireStore in real time
+    const doc = db.collection("BattleShip").doc("Player1")
+    const observer = doc.onSnapshot(docSnapshot => {
+      //console.log(`4) Received real-time coordinate from Firestore: ${docSnapshot.coordinate}`);
+      coordinate = docSnapshot._fieldsProto.coordinate.stringValue;
+
+      console.log("4) Received real-time coordinate from Firestore:", coordinate);//JSON.stringify(docSnapshot)
+    }, err => {
+      console.log(`Encountered error: ${err}`);
+    });
+
+    response.send({hit: hit, coor:coordinate});
+  });
+
+  app.get('/api-endpoint', function(request, response){
+   response.send({endpoint:'I am a really shitty unsecure api endpoint that returns data'});
+  })
+
 
 
 };
