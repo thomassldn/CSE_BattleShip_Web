@@ -6,7 +6,7 @@
 
 var express = require('express');
 var app = express();
-var simpleFormController = require('./controllers/controller'); // this is the controller.js file in the controller folder
+var controllers = require('./controllers/controller'); // this is the controller.js file in the controller folder
 
 //Template engine
 app.set('view engine', 'ejs');
@@ -15,7 +15,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('./public'));
 
 //Fire controllers
-simpleFormController(app);// pass app
+controllers(app);// pass app
 
 app.listen(3000);
 
