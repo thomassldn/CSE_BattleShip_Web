@@ -36,16 +36,16 @@ module.exports = function(app){
 
    //Create random sequence - A9X23
    randomSequ = Math.random().toString(36).substring(7);
-   console.log("New room Id created: http://localhost:8080/", randomSequ);
+   console.log("2) New game room created: http://localhost:8080/gameboard/" + randomSequ);
 
    game = {game_id: randomSequ};
 
-   res.render('start', game);
+   res.render('start', game); //send user views/start.js file
 
  });
 
   //Start of Application
-  app.get('/gameboard/:id', function(request, response){
+  app.get('/gameboard/:room_id', function(request, response){
 
     /*
      if(request.params.id == "*_2"){
@@ -54,11 +54,42 @@ module.exports = function(app){
        player 2;
      }
      */
-
-      response.render('gameboard.ejs', game);
+     console.log("3) ./views/gameboard.ejs sent to user");
+     response.render('gameboard.ejs', {game_id:request.params.room_id})
 
 
     });
+
+    app.post('/gameboard/:room_id', function(request, response){
+
+      //console.log("GAME: ", request.params.room_id);
+
+      //1) Receive  coordinate from front end
+      let hit = false;
+      let id = request.body.id;
+      //let game_room = request.body.game_id;
+
+      console.log("5) Coordinate received from front end:", request.body.id);
+      //console.log("New game started: ", game_id);
+
+      //console.log("C)
+      //check firebase to see if id hit
+      if(!hit){
+        //hit = true;
+        //2) Sending coordinate to Firestore
+        console.log("6) Sending coordinate to Firestore database: ", request.body.id);
+
+        hit = firestoreData.sendDataToFirestore(request.body.id, request.params.room_id);
+        //console.log("5) Sending coordinate to front-end: ", firestoreData.receiveDataFromFirestore;
+      }
+
+      //Send the real-time coordinate that was just received from firestore to the  front-end
+      coordinate = firestoreData.getDataFromFirestore();
+      console.log("5) Received coordinate from  back end", coordinate);
+      response.send({hit: hit, coor:coordinate});
+
+    });
+/*
 
   app.post('/gameboard', function(request, response){
 
@@ -87,10 +118,16 @@ module.exports = function(app){
 
   });
 
+*/
+
+
+
+
+/*
   app.get('/api-endpoint', function(request, response){
    response.send({endpoint:'I am a really shitty unsecure api endpoint that returns data'});
   })
-
+*/
 
 
 };
