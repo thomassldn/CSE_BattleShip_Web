@@ -15,7 +15,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
- <link rel="stylesheet" type="text/css" href="css/battleship.css" />
+ <link rel="stylesheet" type="text/css" href="/css/battleship.css" />
    <meta charset="utf-8" />
 
 
@@ -24,7 +24,6 @@
 
 <body>
 
-  <!--<h1>http://localhost:8080/<%= game_id %></h1></br></br>-->
 
 
     <form name="userboard">
@@ -329,37 +328,9 @@
     </form>
 
 </body>
-<script src="js/client.js"></script>
-
-
-<!--
 <script>
-    function firebaseResponse(value){
-
-        // response is hit return true else return false
-        return false;
-    }
-
-    let locators = document.querySelectorAll('.locator');
-    if(locators !== null){
-        for(const locator of locators){
-            locator.addEventListener('click', function(e){
-                e.preventDefault();
-                //let coords = e.target.value.replace(/\s/, '');
-                let coords = e.target.dataset.id;
-                console.log(coords)
-                //send to firebase and handle response
-                let hit = firebaseResponse(coords);
-                if(hit){
-                    locator.classList.add('hit');
-                    locator.value = 'X'
-                } else {
-                    locator.classList.add('miss');
-                    locator.value = 'miss'
-                }
-            })
-        }
-    }
+  var game_room = <%- JSON.stringify(game_id) %>;
 </script>
--->
+<script src="/js/client.js"></script>
+
 </html>
