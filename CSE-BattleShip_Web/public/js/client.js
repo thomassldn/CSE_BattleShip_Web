@@ -8,15 +8,16 @@ if(locators !== null){
             e.preventDefault(); //prevent regular form behavior
             //let coords = e.target.value.replace(/\s/, '');
             let coords = e.target.dataset.id;
-<<<<<<< HEAD
 
-=======
             let computerCoords = Number(coords) + 100;
->>>>>>> 5a8a1b5739f36440222c55b7b0a35e096ae34866
-            console.log("Coordinate send to back-end: ", coords);
 
+
+            console.log("4) Coordinate sent to back-end: ", coords);
+
+          //  console.log("ROOM", game_room );
             //send to firebase and handle response
-            fetch('/gameboard', {
+            let postRoute = '/gameboard/'+ game_room;
+            fetch(postRoute, {
 
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -38,27 +39,22 @@ if(locators !== null){
                     //console.log("Locator Value: ", locator.value );
 
                     locator.value = 'X'
-<<<<<<< HEAD
+
                     //locator.value = "Y"
-=======
+
                     for(const locator of computerBoard.querySelectorAll('.locator')){
                         if(Number(locator.dataset.id) == computerCoords) {
-                            locator.classList.add('hit'); 
+                            locator.classList.add('hit');
                             locator.value = 'X';
                         }
                     }
                     //console.log(computerBoard[index])
->>>>>>> 5a8a1b5739f36440222c55b7b0a35e096ae34866
+
                 } else {
 
                     locator.classList.add('miss');
                     locator.value = 'miss'
-<<<<<<< HEAD
 
-=======
-                    
-                    
->>>>>>> 5a8a1b5739f36440222c55b7b0a35e096ae34866
                 }
 
 
